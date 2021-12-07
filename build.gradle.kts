@@ -6,6 +6,7 @@ plugins {
 	kotlin("jvm") version "1.6.0"
 	kotlin("plugin.spring") version "1.6.0"
 	kotlin("plugin.jpa") version "1.6.0"
+    id("com.palantir.docker") version "0.31.0"
 }
 
 group = "com.example"
@@ -36,4 +37,25 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+docker {
+    val name = project.name
+    val jarFile = tasks.bootJar.get()
+        .archiveFile.get()
+        .asFile
+
+    copySpec.from(jarFile).into("./")
+
+    setName(name)
+    setDockerfile(File("Dockerfile"))
+    buildArgs(mapOf(
+        "JAR_FILE" to jarFile.name,
+        "NAME" to name,
+    ))
+}
+
+tasks.register("dockerBuild") {
+    dependsOn(tasks.bootJar)
+    dependsOn(tasks.docker)
 }
