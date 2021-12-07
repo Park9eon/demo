@@ -14,17 +14,17 @@ services:
   redis:
     image: redis:latest
     restart: always
-  boot1:
+  blue:
     image: demo:latest
     restart: always
-    command: "--spring.application.name=boot1"
+    command: "--spring.application.name=blue"
     depends_on:
       - postgres
       - redis
-  boot2:
+  green:
     image: demo:latest
     restart: always
-    command: "--spring.application.name=boot2"
+    command: "--spring.application.name=green"
     depends_on:
       - postgres
       - redis
@@ -37,8 +37,8 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - boot1
-      - boot2
+      - blue
+      - green
 
 volumes:
   postgres-volume:

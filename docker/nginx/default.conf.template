@@ -1,6 +1,7 @@
 upstream backend {
-    server boot1:8080;
-    server boot2:8080;
+    least_conn;
+    server blue:8080 weight=5;
+    server green:8080;
 }
 
 server {
