@@ -1,0 +1,44 @@
+version: "3.1"
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      TZ: Asia/Seoul
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+  redis:
+    image: redis:latest
+    restart: always
+  boot1:
+    image: demo:latest
+    restart: always
+    command: "--spring.application.name=boot1"
+    depends_on:
+      - postgres
+      - redis
+  boot2:
+    image: demo:latest
+    restart: always
+    command: "--spring.application.name=boot2"
+    depends_on:
+      - postgres
+      - redis
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./docker/nginx:/etc/nginx/templates
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - boot1
+      - boot2
+
+volumes:
+  postgres-volume:

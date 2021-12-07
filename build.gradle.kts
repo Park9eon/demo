@@ -51,7 +51,6 @@ docker {
     setDockerfile(File("Dockerfile"))
     buildArgs(mapOf(
         "JAR_FILE" to jarFile.name,
-        "NAME" to name,
     ))
 }
 

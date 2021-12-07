@@ -1,0 +1,10 @@
+upstream backend {
+    server boot1:8080;
+    server boot2:8080;
+}
+
+server {
+    location / {
+        proxy_pass http://backend;
+    }
+}
