@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -e
+
+./gradlew bootJar
+
+./gradlew docker
+
+docker-compose up --build --force-recreate --no-deps -d blue
+
+# Watchdog
+while true; do
+  echo "blue wait..."
+  CODE=$(docker-compose exec nginx curl -o /dev/null -w '%{http_code}' -sf blue:8080 || echo "")
+  if [[ "${CODE}" -ne "000" ]]; then
+    echo "blue is ready!"
+    break
+  fi
+done
+
+sleep 5;
+
+docker-compose up --build --force-recreate --no-deps -d green
+
+echo "green is running..."

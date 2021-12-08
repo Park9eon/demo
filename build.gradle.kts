@@ -53,8 +53,3 @@ docker {
         "JAR_FILE" to jarFile.name,
     ))
 }
-
-tasks.register("dockerBuild") {
-    dependsOn(tasks.bootJar)
-    dependsOn(tasks.docker)
-}
